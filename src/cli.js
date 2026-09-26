@@ -14,6 +14,8 @@ import {
   writeIngresosMagentoXls,
 } from './ingresos.js';
 
+const FLEXXUS_DIR = 'Flexxus';
+
 export async function runCli(argv) {
   const program = new Command();
 
@@ -31,8 +33,18 @@ export async function runCli(argv) {
     .action(async (options) => {
       const config = getConfig();
       const progress = createProgressReporter({ enabled: !options.json });
-      const conditionsPath = options.xls || 'Flexxus/Planilla de Stock 25-09-2026 10-54-19.XLS';
-      const articlesPath = options.articlesXls || 'Flexxus/Listado de Artculos 25-09-2026 10-48-20.XLS';
+      const conditionsPath = await resolveExcelPath({
+        explicitPath: options.xls,
+        rootDir: FLEXXUS_DIR,
+        nameIncludes: 'stock',
+        label: 'Flexxus stock/conditions Excel',
+      });
+      const articlesPath = await resolveExcelPath({
+        explicitPath: options.articlesXls,
+        rootDir: FLEXXUS_DIR,
+        nameIncludes: 'art',
+        label: 'Flexxus articles Excel',
+      });
 
       progress.step(1, 5, 'Leyendo planilla de condiciones...');
       progress.startBatch({ completed: 0, total: 1, processed: 0, totalItems: 1 });
@@ -73,15 +85,21 @@ export async function runCli(argv) {
   program
     .command('ingresos:magento')
     .description('Create an Excel report showing whether ingreso products exist and are enabled in Magento')
-    .option('--file <path>', 'Ingresos Excel path', 'Flexxus/INGRESOS DESDE EL 14 AL 19 SEPT.xlsx')
+    .option('--file <path>', 'Ingresos Excel path')
     .option('--output <path>', 'Output Excel path')
     .action(async (options) => {
       const config = getConfig();
       const progress = createProgressReporter({ enabled: true });
+      const inputPath = await resolveExcelPath({
+        explicitPath: options.file,
+        rootDir: FLEXXUS_DIR,
+        nameIncludes: 'ingresos',
+        label: 'Flexxus ingresos Excel',
+      });
 
       progress.step(1, 4, 'Leyendo Excel de ingresos...');
       progress.startBatch({ completed: 0, total: 1, processed: 0, totalItems: 1 });
-      const ingresos = readIngresosXls(options.file);
+      const ingresos = readIngresosXls(inputPath);
       progress.finishBatch({ completed: 1, total: 1, processed: 1, totalItems: 1 });
       progress.detail(`${ingresos.rows.length} filas desde hoja "${ingresos.sheetName}"`);
 
