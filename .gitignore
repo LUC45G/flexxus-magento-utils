@@ -1,0 +1,20 @@
+# Secrets
+.env
+
+# Dependencies and local package cache
+node_modules/
+.npm-cache/
+
+# Generated reports and runtime output
+outputs/
+*.log
+
+# Local ERP/Magento exports and operational spreadsheets
+Flexxus/
+*.xls
+*.xlsx
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/

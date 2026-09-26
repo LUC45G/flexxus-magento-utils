@@ -1,0 +1,22 @@
+{
+  "name": "ecommerce-utils",
+  "version": "0.1.0",
+  "description": "CLI utilities to audit Flexxus ERP products against Magento products.",
+  "type": "module",
+  "bin": {
+    "ecom-utils": "./bin/ecom-utils.js"
+  },
+  "scripts": {
+    "audit": "node ./bin/ecom-utils.js audit",
+    "ingresos:magento": "node ./bin/ecom-utils.js ingresos:magento",
+    "magento:doctor": "node ./bin/ecom-utils.js magento:doctor",
+    "xls:columns": "node ./bin/ecom-utils.js xls:columns",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {}
+}
